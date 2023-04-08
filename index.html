@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var global = {};
+    </script>
+    <script src="https://cdn.staticfile.org/prettydiff/2.2.8/prettydiff.min.js"></script>
+    <script src="https://cdn.staticfile.org/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="./index.js"></script>
+</head>
+
+<body>
+    <input type="file" id="file1">
+    <input type="file" id="file2">
+    <button onclick="convertFiles()">对比相似度</button>
+    <div id="show"></div>
+    <script>
+        async function c() {
+            if (window.blob1 && window.blob2) {
+                let r = await compare(window.blob1, window.blob2, (d) => { document.getElementById('show').innerHTML=d.text })
+                console.log(r)
+            }
+        }
+        function convertFiles() {
+            const file1 = document.getElementById("file1").files[0];
+            const file2 = document.getElementById("file2").files[0];
+
+            const reader1 = new FileReader();
+            reader1.readAsArrayBuffer(file1);
+            reader1.onload = function () {
+                window.blob1 = new Blob([reader1.result], { type: file1.type });
+                console.log("Blob 1:", blob1);
+                c();
+            };
+
+            const reader2 = new FileReader();
+            reader2.readAsArrayBuffer(file2);
+            reader2.onload = function () {
+                window.blob2 = new Blob([reader2.result], { type: file2.type });
+                console.log("Blob 2:", blob2);
+                c();
+            };
+        }
+    </script>
+</body>
+
+</html>
